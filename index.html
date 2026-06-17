@@ -993,6 +993,47 @@
     }
 
 
+
+
+    /* =============================================
+       AJUSTE FEEDBACKS — IMAGENS MAIORES
+       O tamanho estava limitado pelo grid e pelo card, não pela resolução exportada no Canva.
+    ============================================= */
+    #feedbacks .container {
+      max-width: 1320px;
+    }
+
+    #feedbacks .section-header {
+      margin-bottom: clamp(3rem, 5vw, 4.5rem);
+    }
+
+    #feedbacks .feedback-grid {
+      max-width: 1240px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: clamp(1.4rem, 2.6vw, 2.2rem);
+      align-items: stretch;
+    }
+
+    #feedbacks .feedback-card {
+      padding: clamp(1rem, 1.5vw, 1.35rem) !important;
+      border-radius: 12px;
+      min-height: 0;
+    }
+
+    #feedbacks .feedback-card img {
+      width: 100% !important;
+      max-width: none !important;
+      border-radius: 12px !important;
+    }
+
+    @media (max-width: 900px) {
+      #feedbacks .feedback-grid {
+        grid-template-columns: 1fr;
+        max-width: 680px;
+      }
+    }
+
+
     /* =============================================
        RESPONSIVE
     ============================================= */
