@@ -996,40 +996,140 @@
 
 
     /* =============================================
-       AJUSTE FEEDBACKS — IMAGENS MAIORES
-       O tamanho estava limitado pelo grid e pelo card, não pela resolução exportada no Canva.
+       AJUSTES RESPONSIVOS — PC, iPad e telemóvel
+       Corrige sobreposição do menu mobile e melhora o respiro em telas menores.
     ============================================= */
-    #feedbacks .container {
-      max-width: 1320px;
+    .mobile-nav {
+      z-index: 1000;
+      background: rgba(241, 237, 228, 0.985);
+      padding: calc(env(safe-area-inset-top, 0px) + 4.5rem) 1.75rem calc(env(safe-area-inset-bottom, 0px) + 3rem);
+      overflow-y: auto;
     }
 
-    #feedbacks .section-header {
-      margin-bottom: clamp(3rem, 5vw, 4.5rem);
+    .close-btn {
+      z-index: 1001;
+      top: calc(env(safe-area-inset-top, 0px) + 1.15rem);
+      right: calc(env(safe-area-inset-right, 0px) + 1.35rem);
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      font-size: 2rem;
+      color: var(--ink);
     }
 
-    #feedbacks .feedback-grid {
-      max-width: 1240px;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: clamp(1.4rem, 2.6vw, 2.2rem);
-      align-items: stretch;
+    .mobile-nav.open ~ nav,
+    body.menu-open nav {
+      pointer-events: none;
     }
 
-    #feedbacks .feedback-card {
-      padding: clamp(1rem, 1.5vw, 1.35rem) !important;
-      border-radius: 12px;
-      min-height: 0;
+    body.menu-open .burger {
+      opacity: 0;
+      visibility: hidden;
     }
 
-    #feedbacks .feedback-card img {
-      width: 100% !important;
-      max-width: none !important;
-      border-radius: 12px !important;
+    @media (min-width: 901px) {
+      .mobile-nav { display: none !important; }
+    }
+
+    @media (max-width: 1024px) {
+      :root { --content-max: 980px; }
+      nav ul { gap: 1.7rem; }
+      nav ul li a { font-size: 0.68rem; letter-spacing: 0.14em; }
+      .container { padding-inline: clamp(1.5rem, 5vw, 3rem); }
     }
 
     @media (max-width: 900px) {
-      #feedbacks .feedback-grid {
-        grid-template-columns: 1fr;
-        max-width: 680px;
+      nav {
+        padding: calc(env(safe-area-inset-top, 0px) + 0.95rem) clamp(1.1rem, 5vw, 1.8rem) 0.95rem;
+      }
+
+      .burger {
+        position: relative;
+        z-index: 101;
+      }
+
+      .mobile-nav a {
+        font-size: clamp(1rem, 4vw, 1.28rem);
+        letter-spacing: 0.22em;
+        line-height: 1.2;
+      }
+
+      #hero {
+        min-height: auto;
+        padding-top: calc(env(safe-area-inset-top, 0px) + 5.2rem) !important;
+        padding-bottom: 4rem !important;
+      }
+
+      #hero .hero-logo[style] {
+        width: clamp(128px, 26vw, 170px) !important;
+        max-width: 170px !important;
+      }
+
+      #hero .brand-name[style],
+      .brand-name {
+        white-space: normal !important;
+        max-width: 90vw;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .mobile-nav {
+        align-items: center;
+        justify-content: flex-start;
+        gap: clamp(2rem, 6vh, 3rem);
+      }
+
+      .close-btn {
+        right: calc(env(safe-area-inset-right, 0px) + 1rem);
+      }
+
+      #hero {
+        padding-inline: 1.2rem !important;
+      }
+
+      #hero .hero-title[style],
+      .hero-title {
+        max-width: 92vw;
+      }
+
+      .hero-sub,
+      .hero-tagline {
+        max-width: 92vw;
+      }
+
+      .btn {
+        width: min(100%, 320px);
+        min-width: 0;
+      }
+
+      .section {
+        padding-block: clamp(4rem, 12vw, 6rem);
+      }
+
+      .section .section-header h2,
+      #sobre h2,
+      #contato h2 {
+        font-size: clamp(2.05rem, 10vw, 2.85rem);
+      }
+
+      .feedback-grid,
+      .tipos-grid,
+      .steps-grid {
+        gap: 1rem;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .mobile-nav a {
+        font-size: 1rem;
+        letter-spacing: 0.20em;
+      }
+
+      .mobile-nav {
+        gap: 1.8rem;
       }
     }
 
@@ -1460,10 +1560,19 @@
     const mobileNav = document.getElementById('mobile-nav');
     const closeBtn = document.getElementById('close-nav');
 
-    burger.addEventListener('click', () => mobileNav.classList.add('open'));
-    closeBtn.addEventListener('click', () => mobileNav.classList.remove('open'));
+    burger.addEventListener('click', () => {
+      mobileNav.classList.add('open');
+      document.body.classList.add('menu-open');
+    });
+    closeBtn.addEventListener('click', () => {
+      mobileNav.classList.remove('open');
+      document.body.classList.remove('menu-open');
+    });
     mobileNav.querySelectorAll('.nav-link').forEach(link => {
-      link.addEventListener('click', () => mobileNav.classList.remove('open'));
+      link.addEventListener('click', () => {
+        mobileNav.classList.remove('open');
+        document.body.classList.remove('menu-open');
+      });
     });
 
     // ---- Scroll reveal ----
