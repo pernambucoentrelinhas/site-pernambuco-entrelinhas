@@ -1,0 +1,1263 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pernambuco Entrelinhas — Bordados Personalizados</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Cormorant+SC:wght@300;400;500;600&family=Abril+Fatface&display=swap" rel="stylesheet" />
+
+  <style>
+    /* =============================================
+       TOKENS
+    ============================================= */
+    :root {
+      /* Colours */
+      --cream:        #F1EDE4;
+      --cream-dark:   #E9E3D8;
+      --ink:          #1C1A17;
+      --ink-soft:     #3D3830;
+      --gold:         #A8864A;
+      --gold-light:   #C9A86C;
+      --blue-brand:   #2B4A7A;
+      --white-card:   rgba(255,255,255,0.72);
+      --border:       rgba(168,134,74,0.28);
+
+      /* Fonts */
+      --font-brand:   'Cormorant SC', serif;
+      --font-title:   'Abril Fatface', serif;
+      --font-body:    'Cormorant Garamond', serif;
+      --font-ui:      'Trebuchet MS', 'Gill Sans', sans-serif; /* fallback for Glacial */
+
+      /* Spacing */
+      --section-pad:  clamp(5rem, 10vw, 9rem);
+      --content-max:  1100px;
+    }
+
+    /* =============================================
+       RESET & BASE
+    ============================================= */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--cream);
+      color: var(--ink);
+      font-family: var(--font-body);
+      font-size: 18px;
+      line-height: 1.75;
+      /* Linen texture via layered SVG noise */
+      background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.055'/%3E%3C/svg%3E"),
+        repeating-linear-gradient(
+          90deg,
+          transparent,
+          transparent 2px,
+          rgba(180,160,120,0.025) 2px,
+          rgba(180,160,120,0.025) 4px
+        ),
+        repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 3px,
+          rgba(180,160,120,0.018) 3px,
+          rgba(180,160,120,0.018) 4px
+        );
+    }
+
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
+
+    /* =============================================
+       LAYOUT HELPERS
+    ============================================= */
+    .container {
+      max-width: var(--content-max);
+      margin-inline: auto;
+      padding-inline: clamp(1.25rem, 5vw, 3rem);
+    }
+
+    .section {
+      padding-block: var(--section-pad);
+    }
+
+    /* needle ornament SVG used as section eyebrow */
+    .eyebrow-needle {
+      display: block;
+      margin-inline: auto;
+      margin-bottom: 0.6rem;
+      opacity: 0.6;
+    }
+
+    /* =============================================
+       NAV
+    ============================================= */
+    nav {
+      position: fixed;
+      inset-block-start: 0;
+      inset-inline: 0;
+      z-index: 100;
+      padding: 1.1rem clamp(1.25rem, 5vw, 3rem);
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      transition: background 0.35s, box-shadow 0.35s;
+    }
+
+    nav.scrolled {
+      background: rgba(241, 237, 228, 0.94);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 1px 0 var(--border);
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 2.4rem;
+      align-items: center;
+    }
+
+    nav ul li a {
+      font-family: var(--font-ui);
+      font-size: 0.72rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      transition: color 0.2s;
+    }
+
+    nav ul li a:hover { color: var(--gold); }
+
+    /* hamburger */
+    .burger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+    .burger span {
+      display: block;
+      width: 24px;
+      height: 1.5px;
+      background: var(--ink);
+      transition: all 0.3s;
+    }
+
+    /* mobile nav overlay */
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(241,237,228,0.97);
+      z-index: 99;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2.5rem;
+    }
+    .mobile-nav.open { display: flex; }
+    .mobile-nav a {
+      font-family: var(--font-ui);
+      font-size: 1rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ink);
+      transition: color 0.2s;
+    }
+    .mobile-nav a:hover { color: var(--gold); }
+    .close-btn {
+      position: absolute;
+      top: 1.4rem;
+      right: 1.6rem;
+      background: none;
+      border: none;
+      font-size: 1.6rem;
+      cursor: pointer;
+      color: var(--ink);
+    }
+
+    /* =============================================
+       HERO
+    ============================================= */
+    #hero {
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding-top: 6rem;
+      padding-bottom: var(--section-pad);
+      padding-inline: clamp(1.25rem, 5vw, 3rem);
+    }
+
+    .hero-logo {
+      width: clamp(90px, 14vw, 130px);
+      margin-bottom: 1.4rem;
+    }
+
+    .brand-name {
+      font-family: var(--font-brand);
+      font-size: clamp(1.3rem, 3.5vw, 2.1rem);
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      color: var(--ink);
+      margin-bottom: 2.6rem;
+    }
+
+    .hero-eyebrow {
+      font-family: var(--font-ui);
+      font-size: 0.68rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.7rem;
+    }
+
+    .hero-eyebrow::before,
+    .hero-eyebrow::after {
+      content: '';
+      display: block;
+      width: 30px;
+      height: 1px;
+      background: var(--gold-light);
+    }
+
+    .hero-title {
+      font-family: var(--font-title);
+      font-size: clamp(2.4rem, 6vw, 4.4rem);
+      line-height: 1.1;
+      color: var(--ink);
+      margin-bottom: 1rem;
+    }
+
+    .hero-sub {
+      font-family: var(--font-body);
+      font-style: italic;
+      font-size: clamp(1.15rem, 2.2vw, 1.45rem);
+      color: var(--blue-brand);
+      margin-bottom: 0.6rem;
+    }
+
+    .hero-tagline {
+      font-family: var(--font-body);
+      font-size: clamp(0.95rem, 1.6vw, 1.1rem);
+      color: var(--ink-soft);
+      opacity: 0.8;
+      margin-bottom: 3rem;
+    }
+
+    .hero-ctas {
+      display: flex;
+      gap: 1.1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    /* =============================================
+       BUTTONS
+    ============================================= */
+    .btn {
+      font-family: var(--font-ui);
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 0.85rem 2.2rem;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: background 0.25s, color 0.25s, border-color 0.25s, transform 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-primary {
+      background: var(--blue-brand);
+      color: #fff;
+      border: 1.5px solid var(--blue-brand);
+    }
+    .btn-primary:hover {
+      background: #1e3560;
+      border-color: #1e3560;
+      transform: translateY(-1px);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--ink);
+      border: 1.5px solid var(--gold);
+    }
+    .btn-outline:hover {
+      background: var(--gold);
+      color: #fff;
+      transform: translateY(-1px);
+    }
+
+    .btn-gold {
+      background: var(--gold);
+      color: #fff;
+      border: 1.5px solid var(--gold);
+    }
+    .btn-gold:hover {
+      background: var(--gold-light);
+      border-color: var(--gold-light);
+      transform: translateY(-1px);
+    }
+
+    /* =============================================
+       SECTION HEADERS
+    ============================================= */
+    .section-header {
+      text-align: center;
+      margin-bottom: clamp(2.5rem, 5vw, 4rem);
+    }
+
+    .section-header h2 {
+      font-family: var(--font-title);
+      font-size: clamp(2rem, 4.5vw, 3.2rem);
+      color: var(--ink);
+      line-height: 1.1;
+      margin-bottom: 0.5rem;
+    }
+
+    .section-header p {
+      font-family: var(--font-body);
+      font-size: 1.05rem;
+      color: var(--ink-soft);
+      opacity: 0.7;
+    }
+
+    /* Divider */
+    .divider {
+      width: 44px;
+      height: 1px;
+      background: var(--gold);
+      margin: 1rem auto;
+      opacity: 0.6;
+    }
+
+    /* =============================================
+       COMO ENCOMENDAR
+    ============================================= */
+    #como-encomendar {
+      background: var(--cream-dark);
+      border-block: 1px solid var(--border);
+    }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2px;
+    }
+
+    .step {
+      padding: clamp(2rem, 4vw, 3rem) 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      position: relative;
+    }
+
+    /* thin vertical separator */
+    .step + .step::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 20%;
+      height: 60%;
+      width: 1px;
+      background: var(--border);
+    }
+
+    .step-num {
+      font-family: var(--font-title);
+      font-size: 3.5rem;
+      color: var(--gold);
+      opacity: 0.18;
+      line-height: 1;
+      margin-bottom: 0.4rem;
+    }
+
+    .step-icon {
+      width: 42px;
+      height: 42px;
+      margin-bottom: 1.1rem;
+      stroke: var(--gold);
+      fill: none;
+      stroke-width: 1.4;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .step h3 {
+      font-family: var(--font-ui);
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink);
+      margin-bottom: 0.6rem;
+    }
+
+    .step p {
+      font-family: var(--font-body);
+      font-size: 1rem;
+      color: var(--ink-soft);
+      line-height: 1.6;
+    }
+
+    /* =============================================
+       TIPOS DE BORDADOS
+    ============================================= */
+    .tipos-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+    }
+
+    .tipo-card {
+      background: var(--white-card);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: clamp(1.6rem, 3vw, 2.4rem);
+      display: flex;
+      flex-direction: column;
+      text-align: center;
+      backdrop-filter: blur(4px);
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+
+    .tipo-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.06);
+    }
+
+    .tipo-card h3 {
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: clamp(1rem, 1.6vw, 1.15rem);
+      color: var(--ink);
+      margin-bottom: 0.8rem;
+    }
+
+    .tipo-card p {
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      color: var(--ink-soft);
+      line-height: 1.65;
+      flex: 1;
+      margin-bottom: 1.4rem;
+    }
+
+    .tipo-price {
+      font-family: var(--font-body);
+      font-weight: 500;
+      font-size: 0.95rem;
+      color: var(--blue-brand);
+      letter-spacing: 0.02em;
+    }
+
+    /* =============================================
+       SOBRE
+    ============================================= */
+    #sobre {
+      background: var(--cream-dark);
+      border-block: 1px solid var(--border);
+    }
+
+    .sobre-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(2.5rem, 6vw, 6rem);
+      align-items: start;
+    }
+
+    .sobre-text h2 {
+      font-family: var(--font-title);
+      font-size: clamp(1.9rem, 3.5vw, 2.8rem);
+      line-height: 1.1;
+      color: var(--ink);
+      margin-bottom: 1.4rem;
+    }
+
+    .sobre-text p {
+      font-family: var(--font-body);
+      font-size: 1.05rem;
+      color: var(--ink-soft);
+      line-height: 1.8;
+      margin-bottom: 1rem;
+    }
+
+    .stats {
+      display: flex;
+      gap: 3rem;
+      margin-top: 2rem;
+      padding-top: 1.6rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .stat-num {
+      font-family: var(--font-title);
+      font-size: 2.2rem;
+      color: var(--gold);
+    }
+
+    .stat-label {
+      font-family: var(--font-ui);
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      opacity: 0.7;
+    }
+
+    /* RIGHT — sobre mim */
+    .sobre-mim-card {
+      background: var(--white-card);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: clamp(1.8rem, 3vw, 2.8rem);
+      backdrop-filter: blur(4px);
+      text-align: center;
+    }
+
+    .avatar-wrap {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin-inline: auto;
+      margin-bottom: 1.4rem;
+      border: 2px solid var(--gold-light);
+    }
+
+    .avatar-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* placeholder avatar */
+    .avatar-placeholder {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #e8ddd0, #d4c8b5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-brand);
+      font-size: 3rem;
+      color: var(--gold);
+      opacity: 0.6;
+    }
+
+    .sobre-mim-card h2 {
+      font-family: var(--font-title);
+      font-size: clamp(1.6rem, 2.5vw, 2rem);
+      margin-bottom: 0.8rem;
+    }
+
+    .sobre-mim-card p {
+      font-family: var(--font-body);
+      font-size: 1rem;
+      color: var(--ink-soft);
+      line-height: 1.8;
+    }
+
+    /* =============================================
+       PORTFÓLIO
+    ============================================= */
+    .portfolio-intro {
+      font-family: var(--font-ui);
+      font-size: 0.65rem;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--gold);
+      text-align: center;
+      margin-bottom: 0.3rem;
+    }
+
+    .portfolio-gallery {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+
+    .gallery-item {
+      overflow: hidden;
+      border-radius: 50%;
+      aspect-ratio: 1;
+      border: 1px solid var(--border);
+      transition: transform 0.3s;
+    }
+
+    .gallery-item:hover { transform: scale(1.03); }
+
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s;
+    }
+    .gallery-item:hover img { transform: scale(1.05); }
+
+    /* =============================================
+       FEEDBACKS
+    ============================================= */
+    #feedbacks {
+      background: var(--cream-dark);
+      border-top: 1px solid var(--border);
+    }
+
+    .feedback-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+    }
+
+    .feedback-card {
+      background: var(--white-card);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      backdrop-filter: blur(4px);
+      transition: transform 0.25s;
+    }
+    .feedback-card:hover { transform: translateY(-3px); }
+
+    .feedback-img {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+    }
+
+    .feedback-body {
+      padding: 1.2rem 1.4rem;
+      display: flex;
+      gap: 0.8rem;
+      align-items: flex-start;
+    }
+
+    .feedback-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--cream-dark);
+      border: 1px solid var(--border);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+      color: var(--gold);
+    }
+
+    .feedback-meta strong {
+      font-family: var(--font-ui);
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      color: var(--ink);
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+
+    .feedback-meta p {
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      color: var(--ink-soft);
+      line-height: 1.55;
+    }
+
+    /* =============================================
+       CONTATO
+    ============================================= */
+    #contato {
+      text-align: center;
+    }
+
+    #contato h2 {
+      font-family: var(--font-title);
+      font-size: clamp(2rem, 5vw, 3.6rem);
+      margin-bottom: 0.5rem;
+    }
+
+    #contato p {
+      font-family: var(--font-body);
+      font-size: 1.05rem;
+      color: var(--ink-soft);
+      margin-bottom: 2.8rem;
+    }
+
+    .contato-links {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .contato-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.7rem;
+      padding: 0.9rem 2rem;
+      border-radius: 3px;
+      font-family: var(--font-ui);
+      font-size: 0.7rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-weight: 600;
+      transition: transform 0.2s, opacity 0.2s;
+      color: #fff;
+    }
+    .contato-btn:hover { transform: translateY(-2px); opacity: 0.88; }
+
+    .contato-btn-ig { background: #C0392B; }
+    .contato-btn-wa { background: #27AE60; }
+
+    .contato-btn svg {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+
+    /* =============================================
+       FOOTER
+    ============================================= */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      border-top: 1px solid var(--border);
+      font-family: var(--font-ui);
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      color: var(--ink-soft);
+      opacity: 0.55;
+    }
+
+    /* =============================================
+       SCROLL REVEAL
+    ============================================= */
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* =============================================
+       RESPONSIVE
+    ============================================= */
+    @media (max-width: 900px) {
+      .steps-grid { grid-template-columns: repeat(2, 1fr); }
+      .step + .step::before { display: none; }
+      .tipos-grid { grid-template-columns: repeat(2, 1fr); }
+      .sobre-grid { grid-template-columns: 1fr; }
+      .portfolio-gallery { grid-template-columns: repeat(3, 1fr); }
+      .feedback-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 600px) {
+      nav ul { display: none; }
+      .burger { display: flex; }
+      .steps-grid { grid-template-columns: 1fr; }
+      .tipos-grid { grid-template-columns: 1fr; }
+      .portfolio-gallery { grid-template-columns: repeat(2, 1fr); }
+      .hero-ctas { flex-direction: column; align-items: center; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal, .gallery-item, .gallery-item img,
+      .tipo-card, .feedback-card, .btn { transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- =============================================
+       NAV
+  ============================================= -->
+  <nav id="main-nav">
+    <ul>
+      <li><a href="#hero">Início</a></li>
+      <li><a href="#como-encomendar">Como Encomendar</a></li>
+      <li><a href="#tipos">Bordados</a></li>
+      <li><a href="#sobre">Ateliê</a></li>
+      <li><a href="#portfolio">Portfólio</a></li>
+      <li><a href="#contato">Contacto</a></li>
+    </ul>
+    <button class="burger" id="burger-btn" aria-label="Abrir menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <div class="mobile-nav" id="mobile-nav">
+    <button class="close-btn" id="close-nav" aria-label="Fechar">×</button>
+    <a href="#hero" class="nav-link">Início</a>
+    <a href="#como-encomendar" class="nav-link">Como Encomendar</a>
+    <a href="#tipos" class="nav-link">Bordados</a>
+    <a href="#sobre" class="nav-link">Ateliê</a>
+    <a href="#portfolio" class="nav-link">Portfólio</a>
+    <a href="#contato" class="nav-link">Contacto</a>
+  </div>
+
+  <!-- =============================================
+       HERO
+  ============================================= -->
+  <section id="hero">
+    <!-- SVG Logo placeholder (frevo parasol) -->
+    <svg class="hero-logo" viewBox="0 0 130 130" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <circle cx="65" cy="65" r="62" fill="none" stroke="#A8864A" stroke-width="1"/>
+      <!-- parasol spokes -->
+      <g transform="translate(65,65)">
+        <line x1="0" y1="-8" x2="0" y2="-48" stroke="#C0392B" stroke-width="6" stroke-linecap="round"/>
+        <line x1="0" y1="-8" x2="0" y2="-48" stroke="#C0392B" stroke-width="6" stroke-linecap="round" transform="rotate(60)"/>
+        <line x1="0" y1="-8" x2="0" y2="-48" stroke="#2B6A30" stroke-width="6" stroke-linecap="round" transform="rotate(120)"/>
+        <line x1="0" y1="-8" x2="0" y2="-48" stroke="#1C3A8A" stroke-width="6" stroke-linecap="round" transform="rotate(180)"/>
+        <line x1="0" y1="-8" x2="0" y2="-48" stroke="#D4A017" stroke-width="6" stroke-linecap="round" transform="rotate(240)"/>
+        <line x1="0" y1="-8" x2="0" y2="-48" stroke="#C0392B" stroke-width="6" stroke-linecap="round" transform="rotate(300)"/>
+        <!-- segments fill -->
+        <path d="M0,-8 L0,-48 A48,48 0 0,1 41.6,-24 Z" fill="#C0392B" opacity="0.82"/>
+        <path d="M0,-8 L41.6,-24 A48,48 0 0,1 41.6,24 Z" fill="#D4A017" opacity="0.82"/>
+        <path d="M0,-8 L41.6,24 A48,48 0 0,1 0,48 Z" fill="#2B6A30" opacity="0.82"/>
+        <path d="M0,-8 L0,48 A48,48 0 0,1 -41.6,24 Z" fill="#1C3A8A" opacity="0.82"/>
+        <path d="M0,-8 L-41.6,24 A48,48 0 0,1 -41.6,-24 Z" fill="#C0392B" opacity="0.82"/>
+        <path d="M0,-8 L-41.6,-24 A48,48 0 0,1 0,-48 Z" fill="#2B6A30" opacity="0.82"/>
+        <!-- needle -->
+        <line x1="0" y1="8" x2="0" y2="55" stroke="#8B6914" stroke-width="1.5" stroke-linecap="round"/>
+        <circle cx="0" cy="8" r="4" fill="#A8864A"/>
+        <ellipse cx="0" cy="56" rx="2" ry="4" fill="#8B6914"/>
+      </g>
+    </svg>
+
+    <p class="brand-name">Pernambuco Entrelinhas</p>
+
+    <p class="hero-eyebrow">Feito à Mão</p>
+
+    <h1 class="hero-title">Bordados Personalizados</h1>
+    <p class="hero-sub">Transformando sentimentos, ideias, momentos em bordado!</p>
+    <p class="hero-tagline">Cada peça é única porque a sua história é única.</p>
+
+    <div class="hero-ctas">
+      <a href="#portfolio" class="btn btn-primary">Ver Portfólio</a>
+      <a href="https://wa.me/message/U52UIUR5G3UTD1" target="_blank" rel="noopener" class="btn btn-outline">Encomendar</a>
+    </div>
+  </section>
+
+  <!-- =============================================
+       COMO ENCOMENDAR
+  ============================================= -->
+  <section id="como-encomendar" class="section">
+    <div class="container">
+      <div class="section-header reveal">
+        <!-- needle eyebrow SVG -->
+        <svg class="eyebrow-needle" width="48" height="32" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 28 Q24 4 44 28" stroke="#A8864A" stroke-width="1" fill="none"/>
+          <circle cx="4" cy="28" r="2" fill="#A8864A"/>
+          <line x1="4" y1="2" x2="4" y2="28" stroke="#A8864A" stroke-width="1"/>
+        </svg>
+        <h2>Como Encomendar</h2>
+        <div class="divider"></div>
+        <p>Quatro passos até ao seu bordado</p>
+      </div>
+
+      <div class="steps-grid">
+        <!-- 1 -->
+        <div class="step reveal">
+          <div class="step-num">1</div>
+          <svg class="step-icon" viewBox="0 0 44 44">
+            <circle cx="22" cy="22" r="18"/>
+            <path d="M15 20 q7-6 14 0"/>
+            <path d="M15 24 q7 5 14 0"/>
+            <circle cx="17" cy="22" r="1.5" fill="#A8864A" stroke="none"/>
+            <circle cx="22" cy="22" r="1.5" fill="#A8864A" stroke="none"/>
+            <circle cx="27" cy="22" r="1.5" fill="#A8864A" stroke="none"/>
+          </svg>
+          <h3>Conversa</h3>
+          <p>Conte-me a sua ideia, sentimento ou momento que deseja eternizar.</p>
+        </div>
+        <!-- 2 -->
+        <div class="step reveal">
+          <div class="step-num">2</div>
+          <svg class="step-icon" viewBox="0 0 44 44">
+            <path d="M13 31 L28 13 L34 19 L19 37 Z"/>
+            <line x1="25" y1="10" x2="36" y2="21"/>
+            <line x1="13" y1="31" x2="10" y2="35"/>
+            <path d="M10 35 l4-1 -1 4"/>
+          </svg>
+          <h3>Esboço</h3>
+          <p>Crio um esboço do bordado para a sua aprovação antes de começar.</p>
+        </div>
+        <!-- 3 -->
+        <div class="step reveal">
+          <div class="step-num">3</div>
+          <svg class="step-icon" viewBox="0 0 44 44">
+            <path d="M10 28 C8 20 14 12 22 12 C30 12 36 20 34 28"/>
+            <path d="M16 26 C14 20 18 15 22 15 C26 15 30 20 28 26"/>
+            <line x1="22" y1="12" x2="22" y2="6"/>
+            <circle cx="22" cy="5" r="2"/>
+          </svg>
+          <h3>Criação</h3>
+          <p>Bordo ponto a ponto, com cuidado e dedicação, até surgir a sua peça.</p>
+        </div>
+        <!-- 4 -->
+        <div class="step reveal">
+          <div class="step-num">4</div>
+          <svg class="step-icon" viewBox="0 0 44 44">
+            <rect x="10" y="16" width="24" height="20" rx="2"/>
+            <path d="M10 22 Q22 30 34 22"/>
+            <path d="M17 16 L17 12 Q22 8 27 12 L27 16"/>
+            <circle cx="22" cy="22" r="2.5"/>
+          </svg>
+          <h3>Entrega</h3>
+          <p>Recebe a sua peça embalada com carinho, pronta para encantar.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================
+       TIPOS DE BORDADOS
+  ============================================= -->
+  <section id="tipos" class="section">
+    <div class="container">
+      <div class="section-header reveal">
+        <svg class="eyebrow-needle" width="48" height="32" viewBox="0 0 48 32" fill="none">
+          <path d="M4 28 Q24 4 44 28" stroke="#A8864A" stroke-width="1" fill="none"/>
+          <circle cx="4" cy="28" r="2" fill="#A8864A"/>
+          <line x1="4" y1="2" x2="4" y2="28" stroke="#A8864A" stroke-width="1"/>
+        </svg>
+        <h2>Tipos de Bordados</h2>
+        <div class="divider"></div>
+      </div>
+
+      <div class="tipos-grid">
+        <div class="tipo-card reveal">
+          <h3>Porta-maternidade / Bordado Infantil</h3>
+          <p>Criado para celebrar a chegada do bebé e/ou fazer parte da sua história, no quartinho e nas memórias — todo personalizado com o tema e as cores escolhidas.</p>
+          <span class="tipo-price">A partir de 50 €</span>
+        </div>
+        <div class="tipo-card reveal">
+          <h3>Porta-alianças / Fita de Buquê</h3>
+          <p>Mais que um detalhe do casamento, uma memória que continua depois do «sim» e pode tornar-se parte da decoração da casa, relembrando o seu dia especial.</p>
+          <span class="tipo-price">A partir de 40 €</span>
+        </div>
+        <div class="tipo-card reveal">
+          <h3>Fotografia Bordada</h3>
+          <p>A foto de um momento especial transformada em arte — uma peça única, bordada à mão, que eterniza as pessoas e lugares que mais ama.</p>
+          <span class="tipo-price">A partir de 60 €</span>
+        </div>
+        <div class="tipo-card reveal">
+          <h3>Jóias Bordadas</h3>
+          <p>Arte para usar, bordada à mão, para carregar a sua identidade com estilo único e artesanal no dia a dia.</p>
+          <span class="tipo-price">A partir de 20 €</span>
+        </div>
+        <div class="tipo-card reveal">
+          <h3>Caderno de Votos e Álbuns</h3>
+          <p>Palavras e momentos importantes transformados em algo que permanece, feito especialmente para si.</p>
+          <span class="tipo-price">A partir de 100 €</span>
+        </div>
+        <div class="tipo-card reveal">
+          <h3>Outros</h3>
+          <p>Bordados decorativos, quadros, chaveiros, ecobags, customização de peças de roupa, entre outras criações únicas.</p>
+          <span class="tipo-price">Preço sob consulta</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================
+       SOBRE
+  ============================================= -->
+  <section id="sobre" class="section">
+    <div class="container">
+      <div class="sobre-grid">
+        <!-- Ateliê -->
+        <div class="sobre-text reveal">
+          <svg class="eyebrow-needle" style="margin-inline:0;margin-bottom:0.5rem;" width="48" height="32" viewBox="0 0 48 32" fill="none">
+            <path d="M4 28 Q24 4 44 28" stroke="#A8864A" stroke-width="1" fill="none"/>
+            <circle cx="4" cy="28" r="2" fill="#A8864A"/>
+            <line x1="4" y1="2" x2="4" y2="28" stroke="#A8864A" stroke-width="1"/>
+          </svg>
+          <h2>Sobre o Ateliê</h2>
+          <div class="divider" style="margin-inline:0;"></div>
+          <p>O Pernambuco Entrelinhas nasceu do meu amor pelas minhas raízes, que está em tudo que faço, num momento em que eu precisava me reencontrar.</p>
+          <p>Criado por mãos pernambucanas a viver em Portugal, cada bordado carrega a vibração do Nordeste brasileiro — as cores do frevo, a força do maracatu, a delicadeza das rendas — entrelaçadas com a serenidade e a tradição artesanal portuguesa.</p>
+          <p>Aqui, cada ponto é um elo entre dois mundos, bordando memórias, afetos e identidade, unindo o calor de Pernambuco à suavidade de Portugal.</p>
+          <div class="stats">
+            <div>
+              <div class="stat-num">100+</div>
+              <div class="stat-label">Peças Criadas</div>
+            </div>
+            <div style="width:1px;background:var(--border);"></div>
+            <div>
+              <div class="stat-num">2</div>
+              <div class="stat-label">Países no Coração</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sobre mim -->
+        <div class="sobre-mim-card reveal">
+          <div class="avatar-wrap">
+            <div class="avatar-placeholder">K</div>
+          </div>
+          <svg class="eyebrow-needle" width="48" height="32" viewBox="0 0 48 32" fill="none">
+            <path d="M4 28 Q24 4 44 28" stroke="#A8864A" stroke-width="1" fill="none"/>
+            <circle cx="4" cy="28" r="2" fill="#A8864A"/>
+            <line x1="4" y1="2" x2="4" y2="28" stroke="#A8864A" stroke-width="1"/>
+          </svg>
+          <h2>Sobre mim</h2>
+          <div class="divider"></div>
+          <p>Me chamo Kitéria, mas pode me chamar de Kitty. Sou pernambucana, recifense, filha de uma mãe professora de profissão e costureira por amor, de um pai contabilista de profissão e artesão por amor — e deles herdei o meu amor pelas atividades manuais.</p>
+          <p style="margin-top:0.8rem;">Moro em Portugal há 4 anos e volto ao Recife todo mês de fevereiro porque sou apaixonada pelo nosso Carnaval. 🩷</p>
+          <p style="margin-top:0.8rem;">Por trás de cada bordado vai encontrar a curiosa, a criativa, a ansiosa, a metida a designer, a artesã, a bordadeira — todas apaixonadas pela arte e seus detalhes.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================
+       PORTFÓLIO
+  ============================================= -->
+  <section id="portfolio" class="section">
+    <div class="container">
+      <div class="section-header reveal">
+        <svg class="eyebrow-needle" width="48" height="32" viewBox="0 0 48 32" fill="none">
+          <path d="M4 28 Q24 4 44 28" stroke="#A8864A" stroke-width="1" fill="none"/>
+          <circle cx="4" cy="28" r="2" fill="#A8864A"/>
+          <line x1="4" y1="2" x2="4" y2="28" stroke="#A8864A" stroke-width="1"/>
+        </svg>
+        <p class="portfolio-intro">Peças únicas, feitas com alma</p>
+        <h2>Portfólio</h2>
+        <div class="divider"></div>
+      </div>
+
+      <!-- Row 1 — wedding rings -->
+      <div class="portfolio-gallery reveal" style="margin-bottom:1rem;">
+        <div class="gallery-item">
+          <div style="width:100%;height:100%;background:linear-gradient(135deg,#f0e8df,#e0d4c5);display:flex;align-items:center;justify-content:center;">
+            <svg viewBox="0 0 100 100" width="60" style="opacity:0.35">
+              <text x="50" y="55" text-anchor="middle" font-family="serif" font-size="10" fill="#8B6914">Mariana &amp;</text>
+              <text x="50" y="68" text-anchor="middle" font-family="serif" font-size="10" fill="#8B6914">Frederico</text>
+              <circle cx="50" cy="35" r="12" fill="none" stroke="#A8864A" stroke-width="1.5"/>
+            </svg>
+          </div>
+        </div>
+        <div class="gallery-item">
+          <div style="width:100%;height:100%;background:linear-gradient(135deg,#f5f0ee,#ede5dc);display:flex;align-items:center;justify-content:center;">
+            <svg viewBox="0 0 100 100" width="60" style="opacity:0.35">
+              <text x="50" y="48" text-anchor="middle" font-family="serif" font-size="9" fill="#8B6914">Catarina</text>
+              <text x="50" y="60" text-anchor="middle" font-family="serif" font-size="9" fill="#8B6914">e Igor</text>
+              <circle cx="50" cy="28" r="8" fill="none" stroke="#C0392B" stroke-width="1"/>
+            </svg>
+          </div>
+        </div>
+        <div class="gallery-item">
+          <div style="width:100%;height:100%;background:linear-gradient(135deg,#eef0e8,#dde4d0);display:flex;align-items:center;justify-content:center;">
+            <svg viewBox="0 0 100 100" width="60" style="opacity:0.35">
+              <text x="50" y="50" text-anchor="middle" font-family="serif" font-size="9" fill="#2B6A30">Patrícia &amp; João</text>
+              <path d="M20 35 Q50 22 80 35" fill="none" stroke="#2B6A30" stroke-width="1"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Row 2 — baby hoops -->
+      <div class="portfolio-gallery reveal" style="margin-bottom:1rem;">
+        <div class="gallery-item">
+          <div style="width:100%;height:100%;background:linear-gradient(135deg,#eef4f8,#dce8f0);display:flex;align-items:center;justify-content:center;">
+            <svg viewBox="0 0 100 60" width="80" style="opacity:0.4">
+              <text x="50" y="32" text-anchor="middle" font-family="serif" font-size="24" font-weight="700" fill="#1C3A8A" letter-spacing="2">BENÍCIO</text>
+            </svg>
+          </div>
+        </div>
+        <div class="gallery-item">
+          <div style="width:100%;height:100%;background:linear-gradient(135deg,#fdf0f5,#f5dde9);display:flex;align-items:center;justify-content:center;">
+            <svg viewBox="0 0 100 80" width="70" style="opacity:0.4">
+              <text x="50" y="50" text-anchor="middle" font-family="serif" font-size="18" fill="#C0392B" font-style="italic">Maité</text>
+              <ellipse cx="50" cy="28" rx="18" ry="22" fill="none" stroke="#C0392B" stroke-width="0.8"/>
+            </svg>
+          </div>
+        </div>
+        <div class="gallery-item">
+          <div style="width:100%;height:100%;background:linear-gradient(135deg,#f8f5ec,#efe9d8);display:flex;align-items:center;justify-content:center;">
+            <svg viewBox="0 0 100 80" width="70" style="opacity:0.4">
+              <text x="50" y="52" text-anchor="middle" font-family="serif" font-size="16" fill="#8B6914" font-style="italic">Beníco</text>
+              <path d="M20 70 Q50 55 80 70" fill="none" stroke="#2B6A30" stroke-width="0.8"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <div style="text-align:center;margin-top:2.5rem;" class="reveal">
+        <a href="https://www.instagram.com/pernambucoentrelinhas" target="_blank" rel="noopener" class="btn btn-outline">Ver mais no Instagram</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================
+       FEEDBACKS
+  ============================================= -->
+  <section id="feedbacks" class="section">
+    <div class="container">
+      <div class="section-header reveal">
+        <svg class="eyebrow-needle" width="48" height="32" viewBox="0 0 48 32" fill="none">
+          <path d="M4 28 Q24 4 44 28" stroke="#A8864A" stroke-width="1" fill="none"/>
+          <circle cx="4" cy="28" r="2" fill="#A8864A"/>
+          <line x1="4" y1="2" x2="4" y2="28" stroke="#A8864A" stroke-width="1"/>
+        </svg>
+        <h2>Feedbacks</h2>
+        <div class="divider"></div>
+      </div>
+
+      <div class="feedback-grid">
+        <div class="feedback-card reveal">
+          <div style="height:220px;background:linear-gradient(145deg,#f0e8e0,#e4d5c5);display:flex;align-items:center;justify-content:center;">
+            <svg viewBox="0 0 120 80" width="110" style="opacity:0.35">
+              <text x="60" y="28" text-anchor="middle" font-family="serif" font-size="8" fill="#C0392B" font-style="italic">O amor de vocês é eterno,</text>
+              <text x="60" y="40" text-anchor="middle" font-family="serif" font-size="8" fill="#C0392B" font-style="italic">além do tempo</text>
+              <text x="60" y="52" text-anchor="middle" font-family="serif" font-size="8" fill="#C0392B" font-style="italic">e da distância</text>
+              <circle cx="60" cy="62" r="10" fill="none" stroke="#A8864A" stroke-width="0.8"/>
+            </svg>
+          </div>
+          <div class="feedback-body">
+            <div class="feedback-avatar">C</div>
+            <div class="feedback-meta">
+              <strong>claudiaaraujo_pmu</strong>
+              <p>Sem palavras pra esse bordado, Ki. Você conseguiu transformar dor em beleza, saudade em arte. 🥹❤️</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="feedback-card reveal">
+          <div style="height:220px;background:linear-gradient(145deg,#f5f0ee,#ede0d5);display:flex;align-items:center;justify-content:center;">
+            <svg viewBox="0 0 120 80" width="110" style="opacity:0.35">
+              <text x="60" y="36" text-anchor="middle" font-family="serif" font-size="14" fill="#8B6914" font-style="italic">Carlota</text>
+              <text x="60" y="50" text-anchor="middle" font-family="serif" font-size="8" fill="#8B6914">♥ João</text>
+              <circle cx="60" cy="40" r="28" fill="none" stroke="#A8864A" stroke-width="0.8"/>
+            </svg>
+          </div>
+          <div class="feedback-body">
+            <div class="feedback-avatar">S</div>
+            <div class="feedback-meta">
+              <strong>sevaibora</strong>
+              <p>Eu amei, você é perfeita! Ainda temos o caderno de votos que ficou incrível 🤩🤩🤩🤩</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="feedback-card reveal">
+          <div style="height:220px;background:linear-gradient(145deg,#ede8e0,#ddd4c4);display:flex;align-items:center;justify-content:center;">
+            <svg viewBox="0 0 120 80" width="100" style="opacity:0.3">
+              <circle cx="60" cy="38" r="28" fill="none" stroke="#A8864A" stroke-width="0.8"/>
+              <circle cx="60" cy="34" r="16" fill="none" stroke="#8B6914" stroke-width="0.5"/>
+              <circle cx="60" cy="30" r="6" fill="none" stroke="#8B6914" stroke-width="0.5"/>
+            </svg>
+          </div>
+          <div class="feedback-body">
+            <div class="feedback-avatar">K</div>
+            <div class="feedback-meta">
+              <strong>karollimars</strong>
+              <p>Obrigada pelo texto e pela sensibilidade. Seu trabalho vai muito além dos pontos e do tecido... ❤️</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================
+       CONTATO
+  ============================================= -->
+  <section id="contato" class="section">
+    <div class="container">
+      <div class="section-header reveal">
+        <svg class="eyebrow-needle" width="48" height="32" viewBox="0 0 48 32" fill="none">
+          <path d="M4 28 Q24 4 44 28" stroke="#A8864A" stroke-width="1" fill="none"/>
+          <circle cx="4" cy="28" r="2" fill="#A8864A"/>
+          <line x1="4" y1="2" x2="4" y2="28" stroke="#A8864A" stroke-width="1"/>
+        </svg>
+        <h2>Vamos Conversar?</h2>
+        <div class="divider"></div>
+        <p>Me conta a sua ideia! Cada bordado começa com uma conversa.</p>
+      </div>
+
+      <div class="contato-links">
+        <a href="https://www.instagram.com/pernambucoentrelinhas" target="_blank" rel="noopener" class="contato-btn contato-btn-ig">
+          <!-- Instagram icon -->
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+            <circle cx="12" cy="12" r="5"/>
+            <circle cx="17.5" cy="6.5" r="1.2" fill="white" stroke="none"/>
+          </svg>
+          @pernambucoentrelinhas
+        </a>
+        <a href="https://wa.me/message/U52UIUR5G3UTD1" target="_blank" rel="noopener" class="contato-btn contato-btn-wa">
+          <!-- WhatsApp icon -->
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/>
+            <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.55 4.116 1.515 5.847L.057 23.886a.5.5 0 0 0 .609.61l6.097-1.447A11.942 11.942 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.907 0-3.695-.5-5.239-1.371l-.375-.213-3.888.921.95-3.821-.233-.382A10 10 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
+          </svg>
+          +351 910 212 402
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================
+       FOOTER
+  ============================================= -->
+  <footer>
+    © 2025 Pernambuco Entrelinhas · Porto, Portugal · Feito com 🧵 e muito afeto
+  </footer>
+
+  <!-- =============================================
+       JS
+  ============================================= -->
+  <script>
+    // ---- Nav scroll behaviour ----
+    const nav = document.getElementById('main-nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 60);
+    }, { passive: true });
+
+    // ---- Mobile menu ----
+    const burger = document.getElementById('burger-btn');
+    const mobileNav = document.getElementById('mobile-nav');
+    const closeBtn = document.getElementById('close-nav');
+
+    burger.addEventListener('click', () => mobileNav.classList.add('open'));
+    closeBtn.addEventListener('click', () => mobileNav.classList.remove('open'));
+    mobileNav.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', () => mobileNav.classList.remove('open'));
+    });
+
+    // ---- Scroll reveal ----
+    const revealEls = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+    revealEls.forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>

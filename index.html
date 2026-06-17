@@ -1,0 +1,1442 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pernambuco Entrelinhas | Bordados personalizados feitos à mão em Portugal</title>
+  <meta name="description" content="Bordados personalizados feitos à mão no Porto, Portugal. Porta-maternidade, porta-alianças, fitas de buquê, fotografias bordadas e peças únicas criadas para eternizar memórias." />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Cormorant+SC:wght@300;400;500;600&family=Abril+Fatface&display=swap" rel="stylesheet" />
+
+  <style>
+    /* =============================================
+       TOKENS
+    ============================================= */
+    :root {
+      /* Colours */
+      --cream:        #F1EDE4;
+      --cream-dark:   #E9E3D8;
+      --ink:          #1C1A17;
+      --ink-soft:     #3D3830;
+      --gold:         #A8864A;
+      --gold-light:   #C9A86C;
+      --blue-brand:   #1033BD;
+      --red-brand:    #FD2E2E;
+      --white-card:   rgba(255,255,255,0.72);
+      --border:       rgba(168,134,74,0.28);
+
+      /* Fonts */
+      --font-brand:   'Cormorant SC', serif;
+      --font-title:   'Abril Fatface', serif;
+      --font-body:    'Cormorant Garamond', serif;
+      --font-ui:      'Trebuchet MS', 'Gill Sans', sans-serif; /* fallback for Glacial */
+
+      /* Spacing */
+      --section-pad:  clamp(5rem, 10vw, 9rem);
+      --content-max:  1100px;
+    }
+
+    /* =============================================
+       RESET & BASE
+    ============================================= */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--cream);
+      color: var(--ink);
+      font-family: var(--font-body);
+      font-size: 18px;
+      line-height: 1.75;
+      /* Linen texture via layered SVG noise */
+      background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.055'/%3E%3C/svg%3E"),
+        repeating-linear-gradient(
+          90deg,
+          transparent,
+          transparent 2px,
+          rgba(180,160,120,0.025) 2px,
+          rgba(180,160,120,0.025) 4px
+        ),
+        repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 3px,
+          rgba(180,160,120,0.018) 3px,
+          rgba(180,160,120,0.018) 4px
+        );
+    }
+
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
+
+    /* =============================================
+       LAYOUT HELPERS
+    ============================================= */
+    .container {
+      max-width: var(--content-max);
+      margin-inline: auto;
+      padding-inline: clamp(1.25rem, 5vw, 3rem);
+    }
+
+    .section {
+      padding-block: var(--section-pad);
+    }
+
+    /* needle ornament SVG used as section eyebrow */
+    .eyebrow-needle {
+      display: block;
+      margin-inline: auto;
+      margin-bottom: 0.6rem;
+      opacity: 0.6;
+    }
+
+    /* =============================================
+       NAV
+    ============================================= */
+    nav {
+      position: fixed;
+      inset-block-start: 0;
+      inset-inline: 0;
+      z-index: 100;
+      padding: 1.1rem clamp(1.25rem, 5vw, 3rem);
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      transition: background 0.35s, box-shadow 0.35s;
+    }
+
+    nav.scrolled {
+      background: rgba(241, 237, 228, 0.94);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 1px 0 var(--border);
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 2.4rem;
+      align-items: center;
+    }
+
+    nav ul li a {
+      font-family: var(--font-ui);
+      font-size: 0.72rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      transition: color 0.2s;
+    }
+
+    nav ul li a:hover { color: var(--gold); }
+
+    /* hamburger */
+    .burger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+    .burger span {
+      display: block;
+      width: 24px;
+      height: 1.5px;
+      background: var(--ink);
+      transition: all 0.3s;
+    }
+
+    /* mobile nav overlay */
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(241,237,228,0.97);
+      z-index: 99;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2.5rem;
+    }
+    .mobile-nav.open { display: flex; }
+    .mobile-nav a {
+      font-family: var(--font-ui);
+      font-size: 1rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ink);
+      transition: color 0.2s;
+    }
+    .mobile-nav a:hover { color: var(--gold); }
+    .close-btn {
+      position: absolute;
+      top: 1.4rem;
+      right: 1.6rem;
+      background: none;
+      border: none;
+      font-size: 1.6rem;
+      cursor: pointer;
+      color: var(--ink);
+    }
+
+    /* =============================================
+       HERO
+    ============================================= */
+    #hero {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Garante o centro perfeito */
+  justify-content: center;
+  text-align: center; /* Garante que o texto não foge para o lado */
+  padding-top: 6rem;
+}
+
+    .hero-logo {
+      width: clamp(90px, 14vw, 130px);
+      margin-bottom: 1.4rem;
+    }
+
+    .brand-name {
+      font-family: var(--font-brand);
+      font-size: clamp(1.3rem, 3.5vw, 2.1rem);
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      color: var(--ink);
+      margin-bottom: 2.6rem;
+    }
+
+    .hero-eyebrow {
+      font-family: var(--font-ui);
+      font-size: 0.68rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.7rem;
+    }
+
+    .hero-eyebrow::before,
+    .hero-eyebrow::after {
+      content: '';
+      display: block;
+      width: 30px;
+      height: 1px;
+      background: var(--gold-light);
+    }
+
+    .hero-title {
+      font-family: var(--font-title);
+      font-size: clamp(2.4rem, 6vw, 4.4rem);
+      line-height: 1.1;
+      color: var(--ink);
+      margin-bottom: 1rem;
+    }
+
+    .hero-sub {
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: clamp(1.4rem, 3vw, 1.85rem); /* Aumentado aqui */
+  color: var(--blue-brand);
+  margin-bottom: 1rem;
+  text-align: center; /* Força o alinhamento central */
+  width: 100%;
+   }
+
+    .hero-tagline {
+  font-family: var(--font-body);
+  font-size: clamp(1.1rem, 2vw, 1.3rem); /* Aumentado aqui */
+  color: var(--ink-soft);
+  opacity: 0.9;
+  margin-bottom: 3rem;
+  text-align: center;
+  width: 100%;
+   }
+
+    .hero-ctas {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  justify-content: center; /* Alinha os dois botões ao centro do ecrã */
+  width: 100%;
+}
+
+
+    /* =============================================
+       BUTTONS
+    ============================================= */
+    .btn {
+  font-family: var(--font-ui);
+  font-size: 0.85rem; /* Letra maior e mais profissional */
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  padding: 1.05rem 3.1rem; /* Mais robusto */
+  min-width: 220px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+    }
+
+    .btn-primary {
+      background: var(--blue-brand);
+      color: #fff;
+      border: 1.5px solid var(--blue-brand);
+    }
+    .btn-primary:hover {
+      background: #1e3560;
+      border-color: #1e3560;
+      transform: translateY(-1px);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--ink);
+      border: 1.5px solid var(--gold);
+    }
+    .btn-outline:hover {
+      background: var(--gold);
+      color: #fff;
+      transform: translateY(-1px);
+    }
+
+    .btn-gold {
+      background: var(--gold);
+      color: #fff;
+      border: 1.5px solid var(--gold);
+    }
+    .btn-gold:hover {
+      background: var(--gold-light);
+      border-color: var(--gold-light);
+      transform: translateY(-1px);
+    }
+
+    /* =============================================
+       SECTION HEADERS
+    ============================================= */
+    .section-header {
+      text-align: center;
+      margin-bottom: clamp(2.5rem, 5vw, 4rem);
+    }
+
+    .section-header h2 {
+      font-family: var(--font-title);
+      font-size: clamp(2rem, 4.5vw, 3.2rem);
+      color: var(--ink);
+      line-height: 1.1;
+      margin-bottom: 0.5rem;
+    }
+
+    .section-header p {
+      font-family: var(--font-body);
+      font-size: 1.05rem;
+      color: var(--ink-soft);
+      opacity: 0.7;
+    }
+
+    /* Divider */
+    .divider {
+      width: 44px;
+      height: 1px;
+      background: var(--gold);
+      margin: 1rem auto;
+      opacity: 0.6;
+    }
+
+    /* =============================================
+       COMO ENCOMENDAR
+    ============================================= */
+    #como-encomendar {
+      background: var(--cream-dark);
+      border-block: 1px solid var(--border);
+    }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2px;
+    }
+
+    .step {
+      padding: clamp(2rem, 4vw, 3rem) 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      position: relative;
+    }
+
+    /* thin vertical separator */
+    .step + .step::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 20%;
+      height: 60%;
+      width: 1px;
+      background: var(--border);
+    }
+
+    .step-num {
+      font-family: var(--font-title);
+      font-size: 3.5rem;
+      color: var(--gold);
+      opacity: 0.18;
+      line-height: 1;
+      margin-bottom: 0.4rem;
+    }
+
+    .step-icon {
+      width: 42px;
+      height: 42px;
+      margin-bottom: 1.1rem;
+      stroke: var(--gold);
+      fill: none;
+      stroke-width: 1.4;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .step h3 {
+      font-family: var(--font-ui);
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink);
+      margin-bottom: 0.6rem;
+    }
+
+    .step p {
+      font-family: var(--font-body);
+      font-size: 1rem;
+      color: var(--ink-soft);
+      line-height: 1.6;
+    }
+
+    /* =============================================
+       TIPOS DE BORDADOS
+    ============================================= */
+    .tipos-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+    }
+
+    .tipo-card {
+      background: var(--white-card);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: clamp(1.6rem, 3vw, 2.4rem);
+      display: flex;
+      flex-direction: column;
+      text-align: center;
+      backdrop-filter: blur(4px);
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+
+    .tipo-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.06);
+    }
+
+    .tipo-card h3 {
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: clamp(1rem, 1.6vw, 1.15rem);
+      color: var(--ink);
+      margin-bottom: 0.8rem;
+    }
+
+    .tipo-card p {
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      color: var(--ink-soft);
+      line-height: 1.65;
+      flex: 1;
+      margin-bottom: 1.4rem;
+    }
+
+    .tipo-price {
+      font-family: var(--font-body);
+      font-weight: 500;
+      font-size: 0.95rem;
+      color: var(--blue-brand);
+      letter-spacing: 0.02em;
+    }
+
+    /* =============================================
+       SOBRE
+    ============================================= */
+    #sobre {
+      background: var(--cream-dark);
+      border-block: 1px solid var(--border);
+    }
+
+    .sobre-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(2.5rem, 6vw, 6rem);
+      align-items: start;
+    }
+
+    .sobre-text h2 {
+      font-family: var(--font-title);
+      font-size: clamp(1.9rem, 3.5vw, 2.8rem);
+      line-height: 1.1;
+      color: var(--ink);
+      margin-bottom: 1.4rem;
+    }
+
+    .sobre-text p {
+      font-family: var(--font-body);
+      font-size: 1.05rem;
+      color: var(--ink-soft);
+      line-height: 1.8;
+      margin-bottom: 1rem;
+    }
+
+    .stats {
+      display: flex;
+      gap: 3rem;
+      margin-top: 2rem;
+      padding-top: 1.6rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .stat-num {
+      font-family: var(--font-title);
+      font-size: 2.2rem;
+      color: var(--gold);
+    }
+
+    .stat-label {
+      font-family: var(--font-ui);
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      opacity: 0.7;
+    }
+
+    /* RIGHT — sobre mim */
+    .sobre-mim-card {
+      background: var(--white-card);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: clamp(1.8rem, 3vw, 2.8rem);
+      backdrop-filter: blur(4px);
+      text-align: center;
+    }
+
+    .avatar-wrap {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin-inline: auto;
+      margin-bottom: 1.4rem;
+      border: 2px solid var(--gold-light);
+    }
+
+    .avatar-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* placeholder avatar */
+    .avatar-placeholder {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #e8ddd0, #d4c8b5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-brand);
+      font-size: 3rem;
+      color: var(--gold);
+      opacity: 0.6;
+    }
+
+    .sobre-mim-card h2 {
+      font-family: var(--font-title);
+      font-size: clamp(1.6rem, 2.5vw, 2rem);
+      margin-bottom: 0.8rem;
+    }
+
+    .sobre-mim-card p {
+      font-family: var(--font-body);
+      font-size: 1rem;
+      color: var(--ink-soft);
+      line-height: 1.8;
+    }
+
+    /* =============================================
+       PORTFÓLIO
+    ============================================= */
+    .portfolio-intro {
+      font-family: var(--font-ui);
+      font-size: 0.65rem;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--gold);
+      text-align: center;
+      margin-bottom: 0.3rem;
+    }
+
+    .portfolio-gallery {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+
+    .gallery-item {
+      overflow: hidden;
+      border-radius: 50%;
+      aspect-ratio: 1;
+      border: 1px solid var(--border);
+      transition: transform 0.3s;
+    }
+
+    .gallery-item:hover { transform: scale(1.03); }
+
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s;
+    }
+    .gallery-item:hover img { transform: scale(1.05); }
+
+    .gallery-item[id] {
+      scroll-margin-top: 110px;
+    }
+
+
+    /* =============================================
+       FEEDBACKS
+    ============================================= */
+    #feedbacks {
+      background: var(--cream-dark);
+      border-top: 1px solid var(--border);
+    }
+
+    .feedback-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+    }
+
+    .feedback-card {
+      background: var(--white-card);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      backdrop-filter: blur(4px);
+      transition: transform 0.25s;
+    }
+    .feedback-card:hover { transform: translateY(-3px); }
+
+    .feedback-img {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+    }
+
+    .feedback-body {
+      padding: 1.2rem 1.4rem;
+      display: flex;
+      gap: 0.8rem;
+      align-items: flex-start;
+    }
+
+    .feedback-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--cream-dark);
+      border: 1px solid var(--border);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+      color: var(--gold);
+    }
+
+    .feedback-meta strong {
+      font-family: var(--font-ui);
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      color: var(--ink);
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+
+    .feedback-meta p {
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      color: var(--ink-soft);
+      line-height: 1.55;
+    }
+
+    /* =============================================
+       CONTATO
+    ============================================= */
+    #contato {
+      text-align: center;
+    }
+
+    #contato h2 {
+      font-family: var(--font-title);
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      line-height: 1.08;
+      margin-bottom: 0.5rem;
+    }
+
+    #contato p {
+      font-family: var(--font-body);
+      font-size: 1.05rem;
+      color: var(--ink-soft);
+      margin-bottom: 2.8rem;
+    }
+
+    .contato-links {
+      display: flex;
+      gap: 1.25rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .contato-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 96px;
+      min-width: 96px;
+      height: 58px;
+      padding: 0;
+      border-radius: 999px;
+      transition: transform 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+      color: #fff;
+      box-shadow: 0 10px 24px rgba(28, 26, 23, 0.08);
+    }
+    .contato-btn:hover {
+      transform: translateY(-2px);
+      opacity: 0.9;
+      box-shadow: 0 14px 30px rgba(28, 26, 23, 0.12);
+    }
+
+    .contato-btn-ig { background: #C0392B; }
+    .contato-btn-wa { background: #27AE60; }
+    .contato-btn-fb { background: var(--blue-brand); }
+
+    .contato-btn svg {
+      width: 22px;
+      height: 22px;
+      flex-shrink: 0;
+    }
+
+    /* =============================================
+       FOOTER
+    ============================================= */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      border-top: 1px solid var(--border);
+      font-family: var(--font-ui);
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      color: var(--ink-soft);
+      opacity: 0.55;
+    }
+
+    /* =============================================
+       SCROLL REVEAL
+    ============================================= */
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+
+
+    /* =============================================
+       AJUSTE CALMO — PREMIUM SEM VIRAR BAGUNÇA
+       Mantém o site delicado, com SEO no texto, mas sem títulos gigantes.
+    ============================================= */
+    #hero {
+      min-height: 100svh;
+      padding: clamp(5.5rem, 8vw, 7rem) clamp(1.25rem, 5vw, 3rem) clamp(4rem, 6vw, 5rem);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    #hero .hero-logo[style] {
+      width: clamp(138px, 12.5vw, 178px) !important;
+      max-width: 178px !important;
+      margin: -1.15rem auto 1.2rem auto !important;
+      filter: drop-shadow(0 8px 16px rgba(61, 56, 48, 0.07));
+    }
+
+    #hero .brand-name[style],
+    .brand-name {
+      font-size: clamp(1.15rem, 2.2vw, 1.85rem) !important;
+      letter-spacing: clamp(0.18em, 0.6vw, 0.30em);
+      line-height: 1.45;
+      margin-bottom: 2.1rem !important;
+      white-space: nowrap;
+    }
+
+    #hero .hero-eyebrow[style],
+    .hero-eyebrow {
+      font-size: clamp(0.70rem, 0.9vw, 0.84rem) !important;
+      letter-spacing: 0.30em !important;
+      margin-bottom: 1.8rem !important;
+      gap: 1rem !important;
+    }
+
+    .hero-eyebrow::before,
+    .hero-eyebrow::after {
+      width: clamp(28px, 4vw, 46px);
+    }
+
+    #hero .hero-title[style],
+    .hero-title {
+      font-family: var(--font-body) !important;
+      font-weight: 700;
+      font-size: clamp(2.15rem, 3.65vw, 3.25rem) !important;
+      line-height: 1.08 !important;
+      letter-spacing: -0.025em;
+      max-width: 720px;
+      margin: 0 auto 1.35rem auto !important;
+      color: #241f1b;
+    }
+
+    .hero-sub {
+      font-size: clamp(1.22rem, 2vw, 1.55rem);
+      line-height: 1.48;
+      max-width: 720px;
+      margin: 0 auto 0.85rem auto;
+      color: var(--blue-brand);
+    }
+
+    .hero-tagline {
+      font-size: clamp(1.02rem, 1.45vw, 1.18rem);
+      line-height: 1.55;
+      max-width: 680px;
+      margin: 0 auto 2.4rem auto;
+      color: rgba(61, 56, 48, 0.78);
+    }
+
+    .section .section-header h2,
+    #sobre h2,
+    #contato h2 {
+      font-family: var(--font-body);
+      font-weight: 700;
+      font-size: clamp(2.35rem, 4vw, 3.35rem);
+      line-height: 1.05;
+      letter-spacing: -0.025em;
+      color: #211f1b;
+    }
+
+    .section .section-header p {
+      font-size: clamp(1.08rem, 1.5vw, 1.22rem);
+      line-height: 1.58;
+    }
+
+    section:not(#contato) img[src="imagens/agulha.png"] {
+      width: clamp(82px, 7vw, 105px) !important;
+      margin-bottom: 1.15rem !important;
+      opacity: 0.82;
+    }
+
+    .step p,
+    .tipo-card p,
+    .sobre-text p,
+    .sobre-mim-card p {
+      font-size: clamp(1.04rem, 1.35vw, 1.16rem);
+    }
+
+    .tipo-card {
+      min-height: 280px;
+      justify-content: center;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    .tipo-card h3 {
+      font-size: clamp(1.18rem, 1.7vw, 1.38rem);
+      line-height: 1.3;
+    }
+
+    .sobre-grid {
+      align-items: center;
+    }
+
+    .avatar-wrap {
+      width: clamp(210px, 20vw, 280px);
+      height: clamp(210px, 20vw, 280px);
+    }
+
+    .stat-red,
+    .heart-red {
+      color: var(--red-brand) !important;
+    }
+
+
+    #contato img[src="imagens/agulha.png"] {
+      width: clamp(82px, 7vw, 105px) !important;
+      margin-bottom: 1.15rem !important;
+      opacity: 0.82;
+    }
+
+    #feedbacks .section-header h2 {
+      max-width: 780px;
+      margin-inline: auto;
+    }
+
+    .feedback-grid {
+      max-width: 1120px;
+      margin-inline: auto;
+    }
+
+    .feedback-card {
+      border-radius: 10px;
+      padding: 14px !important;
+    }
+
+    footer {
+      font-size: 0.72rem;
+      line-height: 1.7;
+      padding: 2.2rem 1.5rem;
+    }
+
+    @media (max-width: 760px) {
+      #hero .brand-name[style],
+      .brand-name {
+        white-space: normal;
+      }
+
+      #hero .hero-title[style],
+      .hero-title {
+        font-size: clamp(2.15rem, 12vw, 3.15rem) !important;
+      }
+    }
+
+
+
+
+    /* =============================================
+       AJUSTE DE RESPIRO DO HERO
+       Mantém os botões arredondados, mas evita o bloco todo aglomerado no centro.
+    ============================================= */
+    #hero {
+      min-height: 100svh;
+      justify-content: flex-start !important;
+      padding-top: clamp(5.2rem, 8vh, 6.6rem) !important;
+      padding-bottom: clamp(3.2rem, 7vh, 5rem) !important;
+    }
+
+    #hero .hero-logo[style] {
+      width: clamp(150px, 11vw, 188px) !important;
+      max-width: 188px !important;
+      margin: 0 auto 1.65rem auto !important;
+    }
+
+    #hero .brand-name[style],
+    .brand-name {
+      margin-bottom: clamp(2.5rem, 5vh, 3.6rem) !important;
+    }
+
+    #hero .hero-eyebrow[style],
+    .hero-eyebrow {
+      margin-bottom: clamp(2rem, 4.5vh, 3rem) !important;
+    }
+
+    #hero .hero-title[style],
+    .hero-title {
+      margin-bottom: clamp(1.35rem, 3vh, 2rem) !important;
+    }
+
+    .hero-sub {
+      margin-bottom: clamp(1rem, 2.4vh, 1.55rem) !important;
+    }
+
+    .hero-tagline {
+      margin-bottom: clamp(2.4rem, 5vh, 3.4rem) !important;
+    }
+
+    .hero-ctas {
+      gap: clamp(1.25rem, 2.5vw, 2rem) !important;
+    }
+
+
+    /* =============================================
+       RESPONSIVE
+    ============================================= */
+    @media (max-width: 900px) {
+      .steps-grid { grid-template-columns: repeat(2, 1fr); }
+      .step + .step::before { display: none; }
+      .tipos-grid { grid-template-columns: repeat(2, 1fr); }
+      .sobre-grid { grid-template-columns: 1fr; }
+      .portfolio-gallery { grid-template-columns: repeat(3, 1fr); }
+      .feedback-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 600px) {
+      nav ul { display: none; }
+      .burger { display: flex; }
+      .steps-grid { grid-template-columns: 1fr; }
+      .tipos-grid { grid-template-columns: 1fr; }
+      .portfolio-gallery { grid-template-columns: repeat(2, 1fr); }
+      .hero-ctas { flex-direction: column; align-items: center; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal, .gallery-item, .gallery-item img,
+      .tipo-card, .feedback-card, .btn { transition: none; }
+    }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "Pernambuco Entrelinhas",
+    "description": "Bordados personalizados feitos à mão no Porto, Portugal.",
+    "url": "https://www.pernambucoentrelinhas.com",
+    "telephone": "+351910212402",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Porto",
+      "addressCountry": "PT"
+    },
+    "sameAs": [
+      "https://www.instagram.com/pernambucoentrelinhas"
+    ]
+  }
+  </script>
+</head>
+<body>
+
+  <!-- =============================================
+       NAV
+  ============================================= -->
+  <nav id="main-nav">
+    <ul>
+      <li><a href="#hero">Início</a></li>
+      <li><a href="#como-encomendar">Como Encomendar</a></li>
+      <li><a href="#tipos">Bordados</a></li>
+      <li><a href="#sobre">Ateliê</a></li>
+      <li><a href="#portfolio">Portfólio</a></li>
+      <li><a href="#contato">Contacto</a></li>
+    </ul>
+    <button class="burger" id="burger-btn" aria-label="Abrir menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <div class="mobile-nav" id="mobile-nav">
+    <button class="close-btn" id="close-nav" aria-label="Fechar">×</button>
+    <a href="#hero" class="nav-link">Início</a>
+    <a href="#como-encomendar" class="nav-link">Como Encomendar</a>
+    <a href="#tipos" class="nav-link">Bordados</a>
+    <a href="#sobre" class="nav-link">Ateliê</a>
+    <a href="#portfolio" class="nav-link">Portfólio</a>
+    <a href="#contato" class="nav-link">Contacto</a>
+  </div>
+
+  <!-- =============================================
+       HERO
+  ============================================= -->
+  <section id="hero">
+    <!-- SVG Logo placeholder (frevo parasol) -->
+ <img src="imagens/logo.png" alt="Pernambuco Entrelinhas - bordados personalizados feitos à mão em Portugal" class="hero-logo" style="display: block; width: 100%; max-width: 180px; margin: -2rem auto 2rem auto;">
+
+   <p class="brand-name" style="margin-bottom: 4rem;">PERNAMBUCO ENTRELINHAS</p>
+
+   <div class="hero-eyebrow" style="font-family: var(--font-ui); font-size: 1.1rem; letter-spacing: 0.4em; text-transform: uppercase; color: var(--gold); display: flex; align-items: center; justify-content: center; gap: 1.5rem; margin-bottom: 3.5rem; width: 100%;">FEITO À MÃO NO PORTO</div>
+
+
+    <h1 class="hero-title" style="font-size: clamp(2.2rem, 4.5vw, 3.2rem); line-height: 1.3; margin-bottom: 2.5rem;">Bordados personalizados feitos à mão</h1>
+    <p class="hero-sub">Peças únicas criadas ponto a ponto para transformar histórias, afetos e momentos especiais em memórias bordadas.</p>
+    <p class="hero-tagline">Criado por mãos pernambucanas a viver em Portugal.</p>
+
+    <div class="hero-ctas">
+      <a href="#portfolio" class="btn btn-primary">Ver Portfólio</a>
+      <a href="https://wa.me/message/U52UIUR5G3UTD1" target="_blank" rel="noopener" class="btn btn-outline">Encomendar</a>
+    </div>
+  </section>
+
+  <!-- =============================================
+       COMO ENCOMENDAR
+  ============================================= -->
+  <section id="como-encomendar" class="section">
+    <div class="container">
+      <div class="section-header reveal">
+        <!-- needle eyebrow SVG -->
+   <img src="imagens/agulha.png" alt="Ícone Agulha" style="display: block; width: 60px; height: auto; min-height: auto; margin: 0 auto 1.5rem auto; object-fit: contain;">
+        </svg>
+        <h2>Do ponto de partida ao ponto final</h2>
+        <div class="divider"></div>
+        <p>Quatro passos até o seu bordado</p>
+      </div>
+
+      <div class="steps-grid">
+        <!-- 1 -->
+        <div class="step reveal">
+          <div class="step-num">1</div>
+          <img src="imagens/icone1.png" alt="Ícone Conversa" style="display: block; width: 60px; height: auto; margin: 0 auto 1rem auto;">
+          <h3>Conversa</h3>
+          <p>Conte-me a sua ideia, sentimento ou momento que deseja eternizar.</p>
+        </div>
+        <!-- 2 -->
+        <div class="step reveal">
+          <div class="step-num">2</div>
+        <img src="imagens/icone2.png" alt="Ícone Esboço" style="display: block; width: 60px; height: auto; margin: 0 auto 1rem auto;">
+          <h3>Esboço</h3>
+          <p>Crio um esboço do bordado para a sua aprovação antes de começar.</p>
+        </div>
+        <!-- 3 -->
+        <div class="step reveal">
+          <div class="step-num">3</div>
+         <img src="imagens/icone3.png" alt="Ícone Criação" style="display: block; width: 60px; height: auto; margin: 0 auto 1rem auto;">
+          <h3>Criação</h3>
+          <p>Bordo ponto a ponto, com cuidado e dedicação, até surgir a sua peça.</p>
+        </div>
+        <!-- 4 -->
+        <div class="step reveal">
+          <div class="step-num">4</div>
+        <img src="imagens/icone4.png" alt="Ícone Entrega" style="display: block; width: 60px; height: auto; margin: 0 auto 1rem auto;">
+          <h3>Entrega</h3>
+          <p>Recebe a sua peça embalada com carinho, pronta para encantar.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================
+       TIPOS DE BORDADOS
+  ============================================= -->
+  <section id="tipos" class="section">
+    <div class="container">
+      <div class="section-header reveal">
+       <img src="imagens/agulha.png" alt="Ícone Agulha" style="display: block; width: 60px; height: auto; min-height: auto; margin: 0 auto 1.5rem auto; object-fit: contain;">
+
+        <h2>Bordados para cada memória</h2>
+        <div class="divider"></div>
+      </div>
+
+      <div class="tipos-grid">
+        <a href="#portfolio-foto-1" class="tipo-card reveal">
+          <h3>Para o dia do sim</h3>
+          <p>Porta-alianças e fitas de buquê personalizados, criados para acompanhar o casamento e permanecer depois dele.</p>
+          <span class="tipo-price">A partir de 40 €</span>
+        </a>
+        <a href="#portfolio-foto-4" class="tipo-card reveal">
+          <h3>Para a chegada de um bebê</h3>
+          <p>Porta-maternidade, bastidores infantis e peças bordadas à mão para guardar a memória dos primeiros momentos.</p>
+          <span class="tipo-price">A partir de 50 €</span>
+        </a>
+        <a href="#portfolio-foto-7" class="tipo-card reveal">
+          <h3>Para eternizar uma fotografia</h3>
+          <p>Retratos e lugares especiais transformados em arte têxtil, com traços delicados e detalhes bordados ponto a ponto.</p>
+          <span class="tipo-price">A partir de 60 €</span>
+        </a>
+        <a href="#portfolio-foto-13" class="tipo-card reveal">
+          <h3>Para vestir sua identidade</h3>
+          <p>Joias bordadas à mão, leves e únicas, pensadas para carregar afeto, cor e história no dia a dia.</p>
+          <span class="tipo-price">A partir de 20 €</span>
+        </a>
+        <a href="#portfolio-foto-8" class="tipo-card reveal">
+          <h3>Para guardar votos e memórias</h3>
+          <p>Cadernos de votos, álbuns e capas personalizadas para transformar palavras importantes em lembranças permanentes.</p>
+          <span class="tipo-price">A partir de 100 €</span>
+        </a>
+        <a href="#portfolio-foto-10" class="tipo-card reveal">
+          <h3>Para outras histórias</h3>
+          <p>Quadros, chaveiros, ecobags, peças decorativas e outras criações bordadas especialmente para si.</p>
+          <span class="tipo-price">Preço sob consulta</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================
+       SOBRE
+  ============================================= -->
+  <section id="sobre" class="section">
+    <div class="container">
+      <div class="sobre-grid">
+        <!-- Ateliê -->
+        <div class="sobre-text reveal">
+        <img src="imagens/agulha.png" alt="Ícone Agulha" style="display: block; width: 60px; height: auto; min-height: auto; margin: 0 auto 1.5rem auto; object-fit: contain;">
+
+          <h2>Sobre o Ateliê</h2>
+          <div class="divider" style="margin-inline:0;"></div>
+          <p>O Pernambuco Entrelinhas nasceu do meu amor pelas minhas raízes, que está em tudo que faço, num momento em que eu precisava me reencontrar.</p>
+          <p>Criado por mãos pernambucanas a viver em Portugal, cada bordado carrega a vibração do Nordeste brasileiro — as cores do frevo, a força do maracatu, a delicadeza das rendas — entrelaçadas com a serenidade e a tradição artesanal portuguesa.</p>
+          <p>Aqui, cada ponto é um elo entre dois mundos, bordando memórias, afetos e identidade, unindo o calor de Pernambuco à suavidade de Portugal.</p>
+          <div class="stats">
+            <div>
+             <div class="stat-num" style="color: var(--blue-brand);">100+</div>
+              <div class="stat-label">Memórias Bordadas</div>
+            </div>
+            <div style="width:1px;background:var(--border);"></div>
+            <div>
+              <div class="stat-num stat-red">2</div>
+              <div class="stat-label">Culturas Entrelaçadas</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sobre mim -->
+        <div class="sobre-mim-card reveal">
+          <div class="avatar-wrap">
+            <img src="imagens/eu.png" alt="Kitéria - Bordadeira do Pernambuco Entrelinhas" class="avatar-img" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+
+          </div>
+       <img src="imagens/agulha.png" alt="Ícone Agulha" style="display: block; width: 60px; height: auto; min-height: auto; margin: 0 auto 1.5rem auto; object-fit: contain;">
+          <h2>Sobre mim</h2>
+          <div class="divider"></div>
+          <p>Me chamo Kitéria, mas pode me chamar de Kitty. Sou pernambucana, recifense, filha de uma mãe professora de profissão e costureira por amor, de um pai contabilista de profissão e artesão por amor — e deles herdei o meu amor pelas atividades manuais.</p>
+          <p style="margin-top:0.8rem;">Moro em Portugal há 4 anos e volto ao Recife todo mês de fevereiro porque sou apaixonada pelo nosso Carnaval. <span class="heart-red">❤️</span></p>
+          <p style="margin-top:0.8rem;">Por trás de cada bordado vai encontrar a curiosa, a criativa, a ansiosa, a metida a designer, a artesã, a bordadeira — todas apaixonadas pela arte e seus detalhes.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================
+       PORTFÓLIO
+  ============================================= -->
+  <section id="portfolio" class="section">
+    <div class="container">
+      <div class="section-header reveal">
+    <img src="imagens/agulha.png" alt="Ícone Agulha" style="display: block; width: 60px; height: auto; min-height: auto; margin: 0 auto 1.5rem auto; object-fit: contain;">
+        <p class="portfolio-intro">Peças únicas, feitas com alma</p>
+        <h2>Portfólio</h2>
+        <div class="divider"></div>
+      </div>
+
+    <!-- GALERIA DE PORTFÓLIO COMPLETA (15 FOTOS) -->
+<div class="portfolio-gallery reveal" style="margin-bottom:1rem;">
+
+  <!-- Foto 1 -->
+  <div class="gallery-item" id="portfolio-foto-1">
+    <img src="imagens/foto1.png" alt="Bordado Personalizado à Mão 1">
+  </div>
+
+  <!-- Foto 2 -->
+  <div class="gallery-item" id="portfolio-foto-2">
+    <img src="imagens/foto2.png" alt="Bordado Personalizado à Mão 2">
+  </div>
+
+  <!-- Foto 3 -->
+  <div class="gallery-item" id="portfolio-foto-3">
+    <img src="imagens/foto3.png" alt="Bordado Personalizado à Mão 3">
+  </div>
+
+  <!-- Foto 4 -->
+  <div class="gallery-item" id="portfolio-foto-4">
+    <img src="imagens/foto4.png" alt="Bordado Personalizado à Mão 4">
+  </div>
+
+  <!-- Foto 5 -->
+  <div class="gallery-item" id="portfolio-foto-5">
+    <img src="imagens/foto5.png" alt="Bordado Personalizado à Mão 5">
+  </div>
+
+  <!-- Foto 6 -->
+  <div class="gallery-item" id="portfolio-foto-6">
+    <img src="imagens/foto6.png" alt="Bordado Personalizado à Mão 6">
+  </div>
+
+  <!-- Foto 7 -->
+  <div class="gallery-item" id="portfolio-foto-7">
+    <img src="imagens/foto7.png" alt="Bordado Personalizado à Mão 7">
+  </div>
+
+  <!-- Foto 8 -->
+  <div class="gallery-item" id="portfolio-foto-8">
+    <img src="imagens/foto8.png" alt="Bordado Personalizado à Mão 8">
+  </div>
+
+  <!-- Foto 9 -->
+  <div class="gallery-item" id="portfolio-foto-9">
+    <img src="imagens/foto9.png" alt="Bordado Personalizado à Mão 9">
+  </div>
+
+  <!-- Foto 10 -->
+  <div class="gallery-item" id="portfolio-foto-10">
+    <img src="imagens/foto10.png" alt="Bordado Personalizado à Mão 10">
+  </div>
+
+  <!-- Foto 11 -->
+  <div class="gallery-item" id="portfolio-foto-11">
+    <img src="imagens/foto11.png" alt="Bordado Personalizado à Mão 11">
+  </div>
+
+  <!-- Foto 12 -->
+  <div class="gallery-item" id="portfolio-foto-12">
+    <img src="imagens/foto12.png" alt="Bordado Personalizado à Mão 12">
+  </div>
+
+  <!-- Foto 13 -->
+  <div class="gallery-item" id="portfolio-foto-13">
+    <img src="imagens/foto13.png" alt="Bordado Personalizado à Mão 13">
+  </div>
+
+  <!-- Foto 14 -->
+  <div class="gallery-item" id="portfolio-foto-14">
+    <img src="imagens/foto14.png" alt="Bordado Personalizado à Mão 14">
+  </div>
+
+  <!-- Foto 15 -->
+  <div class="gallery-item" id="portfolio-foto-15">
+    <img src="imagens/foto15.png" alt="Bordado Personalizado à Mão 15">
+  </div>
+
+</div>
+
+
+      <div style="text-align:center;margin-top:2.5rem;" class="reveal">
+        <a href="https://www.instagram.com/pernambucoentrelinhas" target="_blank" rel="noopener" class="btn btn-outline">Ver mais no Instagram</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================
+       FEEDBACKS
+  ============================================= -->
+  <section id="feedbacks" class="section">
+    <div class="container">
+      <div class="section-header reveal">
+   <img src="imagens/agulha.png" alt="Ícone Agulha" style="display: block; width: 60px; height: auto; min-height: auto; margin: 0 auto 1.5rem auto; object-fit: contain;">
+        <h2>Palavras de quem já recebeu uma memória bordada</h2>
+        <div class="divider"></div>
+      </div>
+
+     <div class="feedback-grid">
+    
+    <!-- Print 1: Claudia -->
+    <div class="feedback-card reveal" style="padding: 10px; display: flex; align-items: center; justify-content: center;">
+      <img src="imagens/feedback1.png" alt="Feedback Cláudia Araújo" style="width: 100%; border-radius: 16px;">
+    </div>
+
+    <!-- Print 2: Sevalbora -->
+    <div class="feedback-card reveal" style="padding: 10px; display: flex; align-items: center; justify-content: center;">
+      <img src="imagens/feedback2.png" alt="Feedback Sevalbora" style="width: 100%; border-radius: 16px;">
+    </div>
+
+    <!-- Print 3: Karol -->
+    <div class="feedback-card reveal" style="padding: 10px; display: flex; align-items: center; justify-content: center;">
+      <img src="imagens/feedback3.png" alt="Feedback Karollimars" style="width: 100%; border-radius: 16px;">
+    </div>
+
+</div>
+
+  </section>
+
+  <!-- =============================================
+       CONTATO
+  ============================================= -->
+  <section id="contato" class="section">
+    <div class="container">
+      <div class="section-header reveal">
+    <img src="imagens/agulha.png" alt="Ícone Agulha" style="display: block; width: 60px; height: auto; min-height: auto; margin: 0 auto 1.5rem auto; object-fit: contain;">
+        <h2>Vamos Conversar?</h2>
+        <div class="divider"></div>
+        <p>Me conta a sua ideia! Cada bordado começa com uma conversa.</p>
+      </div>
+
+      <div class="contato-links">
+        <a href="https://www.instagram.com/pernambucoentrelinhas" target="_blank" rel="noopener" class="contato-btn contato-btn-ig" aria-label="Instagram Pernambuco Entrelinhas">
+          <!-- Instagram icon -->
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+            <circle cx="12" cy="12" r="5"/>
+            <circle cx="17.5" cy="6.5" r="1.2" fill="white" stroke="none"/>
+          </svg>
+        </a>
+        <a href="https://wa.me/message/U52UIUR5G3UTD1" target="_blank" rel="noopener" class="contato-btn contato-btn-wa" aria-label="WhatsApp Pernambuco Entrelinhas">
+          <!-- WhatsApp icon -->
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/>
+            <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.55 4.116 1.515 5.847L.057 23.886a.5.5 0 0 0 .609.61l6.097-1.447A11.942 11.942 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.907 0-3.695-.5-5.239-1.371l-.375-.213-3.888.921.95-3.821-.233-.382A10 10 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
+          </svg>
+        </a>
+        <a href="https://www.facebook.com/share/17wjUud4FD/?mibextid=wwXIfr" target="_blank" rel="noopener" class="contato-btn contato-btn-fb" aria-label="Facebook Pernambuco Entrelinhas">
+          <!-- Facebook icon -->
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M22 12.06C22 6.48 17.52 2 11.94 2S2 6.48 2 12.06c0 5.04 3.68 9.22 8.49 9.98v-7.06H7.96v-2.92h2.53V9.84c0-2.5 1.49-3.88 3.77-3.88 1.09 0 2.23.2 2.23.2v2.45h-1.26c-1.24 0-1.63.77-1.63 1.56v1.89h2.77l-.44 2.92H13.6v7.06C18.32 21.28 22 17.1 22 12.06z"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================
+       FOOTER
+  ============================================= -->
+  <footer>
+    © 2026 Pernambuco Entrelinhas · Ateliê de bordados à mão personalizados no Porto, Portugal · Feito com 🧵 e muito afeto.   |   Todos os direitos reservados.
+  </footer>
+
+  <!-- =============================================
+       JS
+  ============================================= -->
+  <script>
+    // ---- Nav scroll behaviour ----
+    const nav = document.getElementById('main-nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 60);
+    }, { passive: true });
+
+    // ---- Mobile menu ----
+    const burger = document.getElementById('burger-btn');
+    const mobileNav = document.getElementById('mobile-nav');
+    const closeBtn = document.getElementById('close-nav');
+
+    burger.addEventListener('click', () => mobileNav.classList.add('open'));
+    closeBtn.addEventListener('click', () => mobileNav.classList.remove('open'));
+    mobileNav.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', () => mobileNav.classList.remove('open'));
+    });
+
+    // ---- Scroll reveal ----
+    const revealEls = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+    revealEls.forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
